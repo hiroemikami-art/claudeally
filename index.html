@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本当の自分がわかる性格診断</title>
+<style>
+  :root{
+    --bg:#f7f6f3;
+    --ink:#2b2b2b;
+    --muted:#6b6b6b;
+    --card:#ffffff;
+    --accent:#4f46e5;
+    --radius:16px;
+    --shadow:0 4px 20px rgba(0,0,0,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Hiragino Sans","Yu Gothic",-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.7;
+  }
+  .wrap{
+    max-width:720px;
+    margin:0 auto;
+    padding:32px 20px 80px;
+  }
+  header{
+    text-align:center;
+    margin-bottom:32px;
+  }
+  header h1{
+    font-size:1.6rem;
+    margin-bottom:8px;
+  }
+  header p{
+    color:var(--muted);
+    font-size:0.95rem;
+  }
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:28px 24px;
+    margin-bottom:20px;
+  }
+  .btn{
+    display:inline-block;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    padding:14px 32px;
+    border-radius:999px;
+    font-size:1rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:transform .15s, opacity .15s;
+  }
+  .btn:hover{ opacity:0.9; transform:translateY(-1px); }
+  .btn.secondary{
+    background:transparent;
+    color:var(--accent);
+    border:2px solid var(--accent);
+  }
+  .center{ text-align:center; }
+  #progress-wrap{
+    height:8px;
+    background:#e5e3dd;
+    border-radius:999px;
+    overflow:hidden;
+    margin-bottom:24px;
+  }
+  #progress-bar{
+    height:100%;
+    width:0%;
+    background:var(--accent);
+    transition:width .25s ease;
+  }
+  .q-count{
+    text-align:right;
+    color:var(--muted);
+    font-size:0.85rem;
+    margin-bottom:4px;
+  }
+  .question{
+    font-size:1.1rem;
+    font-weight:600;
+    margin-bottom:20px;
+  }
+  .scale{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .scale button{
+    flex:1;
+    padding:14px 4px;
+    border-radius:12px;
+    border:2px solid #e5e3dd;
+    background:#fff;
+    cursor:pointer;
+    font-size:0.8rem;
+    color:var(--muted);
+    transition:all .15s;
+  }
+  .scale button:hover{
+    border-color:var(--accent);
+    color:var(--accent);
+  }
+  .scale button.selected{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#fff;
+  }
+  .scale-labels{
+    display:flex;
+    justify-content:space-between;
+    color:var(--muted);
+    font-size:0.75rem;
+    margin-top:6px;
+  }
+  .nav-row{
+    display:flex;
+    justify-content:space-between;
+    margin-top:24px;
+  }
+  .hidden{ display:none !important; }
+
+  .result-badge{
+    display:inline-block;
+    padding:6px 16px;
+    border-radius:999px;
+    color:#fff;
+    font-weight:700;
+    font-size:0.85rem;
+    margin-bottom:12px;
+  }
+  .result-title{
+    font-size:1.8rem;
+    font-weight:800;
+    margin:0 0 8px;
+  }
+  .result-lead{
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+  .section-title{
+    font-size:0.95rem;
+    font-weight:700;
+    margin:22px 0 8px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .section-title .dot{
+    width:8px; height:8px; border-radius:50%;
+    display:inline-block;
+  }
+  .tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .tag{
+    background:#f1f0ec;
+    padding:6px 14px;
+    border-radius:999px;
+    font-size:0.85rem;
+  }
+  .sub-scores{
+    margin-top:8px;
+  }
+  .sub-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+    font-size:0.85rem;
+  }
+  .sub-row .label{
+    width:110px;
+    flex-shrink:0;
+    color:var(--muted);
+  }
+  .sub-bar-wrap{
+    flex:1;
+    background:#eeece7;
+    border-radius:999px;
+    height:10px;
+    overflow:hidden;
+  }
+  .sub-bar{
+    height:100%;
+    border-radius:999px;
+  }
+  footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:0.8rem;
+    margin-top:40px;
+  }
+  .consult-card{
+    background:#fbf6ec;
+    border:1px solid #ecdfc4;
+  }
+  .consult-price{
+    font-weight:700;
+    font-size:1.05rem;
+    color:var(--accent);
+    margin:10px 0;
+  }
+  .consult-lead{
+    font-size:0.9rem;
+    color:var(--muted);
+    margin-bottom:14px;
+  }
+  .line-btn{
+    background:#06c755;
+    width:100%;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>本当の自分がわかる性格診断</h1>
+    <p>30の質問から、あなたの中心にある性格タイプと隠れた才能を見つけます</p>
+  </header>
+
+  <!-- INTRO -->
+  <div id="screen-intro" class="card center">
+    <p style="margin-bottom:20px;">
+      誰にでも生まれつきの「得意なものの見方・感じ方」があります。<br>
+      その一方で、ストレスがかかると人はつい同じような言動を繰り返してしまいがちです。<br>
+      この診断では、あなたの基本タイプと、そこに隠れている才能・伸ばし方・向いている仕事までをまとめてお伝えします。
+    </p>
+    <p style="color:var(--muted); font-size:0.85rem; margin-bottom:24px;">
+      所要時間: 約3分 / 質問数: 30問
+    </p>
+    <button class="btn" onclick="startQuiz()">診断をはじめる</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="card hidden">
+    <div class="q-count" id="q-count">1 / 30</div>
+    <div id="progress-wrap"><div id="progress-bar"></div></div>
+    <div class="question" id="q-text">質問文</div>
+    <div class="scale" id="q-scale"></div>
+    <div class="scale-labels">
+      <span>全く当てはまらない</span>
+      <span>非常に当てはまる</span>
+    </div>
+    <div class="nav-row">
+      <button class="btn secondary" id="btn-back" onclick="goBack()">戻る</button>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="hidden">
+    <div class="card">
+      <span class="result-badge" id="r-badge">タイプ</span>
+      <h2 class="result-title" id="r-title">タイプ名</h2>
+      <p class="result-lead" id="r-lead">特徴</p>
+
+      <div class="sub-scores" id="r-subscores"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title"><span class="dot" style="background:#e0575b;"></span>陥りがちな言動・口癖</div>
+      <p id="r-distress"></p>
+
+      <div class="section-title"><span class="dot" style="background:#e8a33d;"></span>隠れている才能</div>
+      <p id="r-talent"></p>
+
+      <div class="section-title"><span class="dot" style="background:#3fa796;"></span>才能を伸ばすアドバイス</div>
+      <p id="r-advice"></p>
+
+      <div class="section-title"><span class="dot" style="background:#6c7ae0;"></span>向き合いたい課題</div>
+      <p id="r-challenge"></p>
+
+      <div class="section-title"><span class="dot" style="background:#b0413e;"></span>この課題を放置すると</div>
+      <p id="r-neglect"></p>
+
+      <div class="section-title"><span class="dot" style="background:#2f9e6e;"></span>課題を乗り越えた先にある可能性</div>
+      <p id="r-potential"></p>
+
+      <div class="section-title"><span class="dot" style="background:#8a5cd6;"></span>向いている職業</div>
+      <div class="tags" id="r-jobs"></div>
+    </div>
+
+    <div class="card consult-card">
+      <div class="section-title" style="margin-top:0;">💬 もっと深く知りたい方へ（個別相談）</div>
+      <p>
+        この結果画面をスクリーンショットで撮影し、下記までお送りいただければ、
+        あなたの状況に合わせた個別相談を承ります。
+      </p>
+      <p class="consult-price">初回のみ　30分 2,000円</p>
+      <p class="consult-lead">ご相談・お問い合わせはこちらのLINE公式アカウントから</p>
+      <a class="btn line-btn" href="https://lin.ee/zwwXxOu" target="_blank" rel="noopener noreferrer">LINE公式アカウントを開く</a>
+    </div>
+
+    <div class="center">
+      <button class="btn secondary" onclick="restart()">もう一度診断する</button>
+    </div>
+  </div>
+
+  <footer>この診断はセルフ理解のための簡易ツールです。結果は目安としてご活用ください。</footer>
+</div>
+
+<script>
+const TYPES = {
+  thinker: {
+    name: "分析家タイプ",
+    color: "#4f6fd6",
+    lead: "物事を感情に流されず、事実やデータに基づいて筋道立てて考えることができる人です。複雑な状況でも冷静に整理し、原因と結果を明確にする力があります。責任感が強く、任された仕事は最後までやり遂げようとする誠実さも持ち合わせています。効率よく仕組みを作ったり、無駄を省いて物事を最適化することも得意で、周囲からは「頼りになる」「筋道を立てて説明してくれる」と評価されることが多いタイプです。一つひとつの判断に理由を持てるからこそ、周りの人が納得しやすい説明ができ、混乱した現場に落ち着きをもたらす存在にもなれます。",
+    distress: "「なぜ?」「根拠は?」と問い詰めすぎたり、完璧を求めて自分にも他人にも厳しくなりがちです。「別に」「まあいいけど」と本音の感情を飲み込み、細部にこだわりすぎて動けなくなったり、休みなく働き続けてしまうこともあります。",
+    talent: "「融通が利かない」「気が利かない」と言われて傷ついた経験の裏には、複雑な物事を整理し筋道を示す『構造化の才能』が隠れています。混乱した状況を明晰にする力です。",
+    advice: "完璧を目指す前に「まず60点で出してみる」練習をしてみましょう。感情を数値化・言語化してみると、自分の気持ちにも気づきやすくなります。",
+    challenge: "白黒つけたがる思考から一歩引き、グレーゾーンを許容する柔軟性を持つこと。感情を後回しにしない習慣をつけること。",
+    neglect: "この課題を放置したまま感情を後回しにし続けると、周囲との間に見えない距離ができ、「機械的」「冷たい人」と誤解されたまま孤立してしまうことがあります。自分自身の疲れやストレスにも気づかないまま無理を重ね、ある日突然燃え尽きてしまうリスクも高まります。",
+    potential: "一方で、感情にも目を向け、グレーゾーンを許容できるようになると、論理と共感を兼ね備えたリーダーとして、これまで以上に多くの人から信頼される存在になれます。物事を整理する力に温かみが加わることで、周囲を巻き込みながら物事を前に進める力が格段に増していきます。",
+    jobs: ["エンジニア","データアナリスト","会計士","研究者","プロジェクトマネージャー","弁護士"]
+  },
+  persister: {
+    name: "信念家タイプ",
+    color: "#8a5cd6",
+    lead: "自分なりの価値観や信念をしっかりと持ち、何が正しく何が大切かを自分の軸で判断できる人です。物事に対して誠実に向き合い、一度引き受けたことは責任を持ってやり遂げます。観察力が鋭く、人や組織の本質、そこに潜む問題を見抜く力があります。信頼できると感じた相手には深く尽くし、正義感を持って周囲や組織を良い方向へ導こうと行動するため、「芯がある人」「信頼できる人」として一目置かれる存在です。周りが流されそうなときにも、ぶれない軸を持って踏みとどまれる強さがあります。",
+    distress: "「普通は〜でしょう」「私はこう思う」と自分の意見を押し通しがちになったり、相手の間違いを指摘せずにいられなくなります。「信じられない」「がっかりだ」と失望を強く表し、完璧な正義を求めて頑なになることもあります。",
+    talent: "「頑固」「うるさい」と否定された経験の裏には、実は『筋を通す力』『物事の質を守る番人としての才能』が隠れています。妥協しない姿勢が本質を守るのです。",
+    advice: "自分の意見を伝える前に、まず相手の意見を最後まで聞く練習をしましょう。「正しいかどうか」より「役に立つかどうか」で判断してみるのもおすすめです。",
+    challenge: "自分と違う価値観を、間違いではなく『違い』として受け入れること。信頼できる相手を増やす柔軟さを持つこと。",
+    neglect: "自分の正しさにこだわり続けると、周囲は「話を聞いてもらえない」と感じ、次第に距離を置かれてしまいます。孤立を深め、本来大切にしたかったはずの信頼関係そのものを失ってしまう可能性があります。",
+    potential: "異なる価値観を「間違い」ではなく「違い」として受け入れられるようになると、信念の強さはそのままに、より多くの人を巻き込みながら物事を良い方向に導くリーダーシップを発揮できるようになります。",
+    jobs: ["監査・品質管理","教師","コンサルタント","医療従事者","経営者","公務員"]
+  },
+  harmonizer: {
+    name: "共感家タイプ",
+    color: "#e07a9e",
+    lead: "人の気持ちの機微を敏感に感じ取り、温かい思いやりを持って人と接することができる人です。場の空気を読み、誰かが困っていればすぐに気づいて手を差し伸べる優しさがあります。人との繋がりを何より大切にし、聞き上手で相手の話にじっくり耳を傾けることができるため、多くの人から「話しやすい」「安心できる」と信頼を寄せられます。チームの雰囲気を和らげ、人と人をつなぐ潤滑油のような存在として力を発揮し、周りにいる人の心を自然とほぐしていきます。",
+    distress: "「すみません」「私が悪いんです」と謝りすぎたり、頼まれると断れず自分を後回しにしがちです。相手の顔色を伺いすぎて本音が言えず、「大丈夫です」と言いながら実は無理をしていることもあります。",
+    talent: "「気にしすぎ」「甘い」と言われて傷ついた経験の裏には、実は『人の心を読み、場をまとめる共感力』という才能が隠れています。人と人をつなぐ架け橋になれる力です。",
+    advice: "「NO」と言う練習を小さなことから始めてみましょう。自分の気持ちを我慢せず、感じたことをそのまま言葉にしてみることも大切です。",
+    challenge: "自分の欲求を後回しにしすぎないこと。人に合わせるだけでなく、自分の意見を主張する勇気を持つこと。",
+    neglect: "自分の気持ちを我慢し続けると、いつか限界がきて心身の不調につながったり、「本当は何がしたいのか分からない」と自分を見失ってしまうことがあります。無理を重ねた末に、突然人間関係を断ち切ってしまうことも少なくありません。",
+    potential: "自分の気持ちを大切にしながら人と関われるようになると、無理のない自然体の優しさで、より長く深い信頼関係を築けるようになります。人を支える力を、自分自身をすり減らさない形で発揮できるようになります。",
+    jobs: ["カウンセラー","看護師","人事","保育士","接客業","チームマネージャー"]
+  },
+  imaginer: {
+    name: "夢想家タイプ",
+    color: "#3fa796",
+    lead: "一人の静かな時間の中で、物事をじっくりと深く考え抜くことができる人です。豊かな想像力を持ち、他の人が気づかないような視点やアイデアを内側に育てています。物静かで落ち着いた佇まいがあり、周囲のペースに流されず自分のペースを保つことができる芯の強さも持っています。表舞台で目立つタイプではありませんが、深い洞察力と独創的な発想力で物事の本質にじっくりと迫ることができる、かけがえのない存在です。",
+    distress: "指示されるまで動かず待ってしまったり、「別に何でもいいです」と自分の意思を出さなくなります。人と距離を置いて一人でどんどん閉じこもったり、考えすぎて動けなくなることもあります。",
+    talent: "「何を考えているかわからない」「やる気がない」と誤解された経験の裏には、実は『深く考え抜く力』『新しい発想を生み出す想像力』という才能が隠れています。誰も気づかない視点を見つける力です。",
+    advice: "頭の中で考えるだけでなく、小さな一歩でいいので行動に移す練習をしましょう。自分から声をかける、意見を言うなど、小さなアウトプットを積み重ねてみてください。",
+    challenge: "受け身の姿勢から、自分から動く・発信する姿勢へ変えていくこと。孤立しすぎないよう人との接点を意識的に持つこと。",
+    neglect: "受け身のまま何もアウトプットしないでいると、周囲から「何を考えているか分からない人」と見なされ、本来の才能や考えに気づいてもらえないまま孤立してしまうことがあります。",
+    potential: "小さな一歩でも自分から発信し、行動できるようになると、内に秘めた深い洞察力や独創的な発想が周囲に伝わり、「唯一無二の視点を持つ人」として頼られる存在になれます。",
+    jobs: ["研究者","作家","デザイナー","プログラマー","戦略プランナー","建築家"]
+  },
+  rebel: {
+    name: "自由人タイプ",
+    color: "#e8a33d",
+    lead: "自発的なエネルギーと遊び心にあふれ、今この瞬間を思いきり楽しむことができる人です。既存の枠組みや当たり前とされていることにとらわれず、自由な発想で新しいものを生み出す創造性を持っています。場を明るくするユーモアのセンスがあり、一緒にいるだけで周囲を元気にする力があります。柔軟でノリがよく、変化にもすぐに対応できるため、閉塞した状況に風穴を開ける存在として重宝されます。",
+    distress: "「めんどくさい」「つまらない」と不満を口にしたり、人のせいにしたり皮肉っぽい言い方をすることがあります。やるべきことを後回しにしたり、ルールや指示に反発したくなることもあります。",
+    talent: "「わがまま」「無責任」と決めつけられた経験の裏には、実は『既成概念を壊す発想力』『場を明るくするエネルギー』という才能が隠れています。誰も思いつかないアイデアで状況を変える力です。",
+    advice: "反発心をそのままぶつけるのではなく、遊び心のあるアイデアとして形にしてみましょう。「なぜやりたくないか」を掘り下げると、本当の課題が見えてきます。",
+    challenge: "感情的な反応の前に一呼吸置くこと。自由さを保ちながらも、最低限の責任とやり切る力を身につけること。",
+    neglect: "反発心や不満をそのままぶつけ続けると、「無責任」「わがまま」というレッテルを貼られ、せっかくの創造性やエネルギーを活かす機会そのものを失ってしまうことがあります。",
+    potential: "一呼吸置いて最低限の責任を果たせるようになると、自由な発想とエネルギーはそのままに、周囲から信頼され、大きな変化を生み出す原動力として力を発揮できるようになります。",
+    jobs: ["クリエイティブディレクター","起業家","イベントプランナー","芸術家","企画職","営業"]
+  },
+  promoter: {
+    name: "行動家タイプ",
+    color: "#e0575b",
+    lead: "どんな状況にも臨機応変に対応できる高い適応力と、物おじしない行動力を持つ人です。魅力的な立ち振る舞いで人を惹きつけ、交渉や説得の場面で本領を発揮します。リスクを恐れず、必要な場面では思い切った決断を下せる度胸があります。頭で考えるより先に動きながら状況を切り開いていくタイプで、危機的な場面やスピード感が求められる状況で誰よりも力を発揮する、「頼れる」「一緒にいて飽きない」と言われる存在です。",
+    distress: "話を大きく盛って言ったり、人を巧みに操作しようとすることがあります。スリルやリスクを求めすぎて無茶をしたり、結果のためなら多少のルール違反も気にしなくなることもあります。",
+    talent: "「調子がいい」「信用できない」と言われて傷ついた経験の裏には、実は『土壇場で状況を動かす行動力』『人を巻き込み動かす説得力』という才能が隠れています。危機的状況でこそ輝く力です。",
+    advice: "短期的な結果だけでなく、長期的な信頼構築を意識してみましょう。人を動かす力を、自分の利益のためでなくチームや目的のために使ってみてください。",
+    challenge: "誠実さと透明性を大切にすること。リスクを取る前に一度立ち止まって考える習慣をつけること。",
+    neglect: "誠実さよりも結果や刺激を優先し続けると、一時的にはうまくいっても次第に周囲からの信頼を失い、「信用できない人」というレッテルを貼られてしまうことがあります。",
+    potential: "誠実さと透明性を大切にできるようになると、持ち前の行動力と説得力が正当に評価され、長期的に信頼される頼れるリーダーとして力を発揮できるようになります。",
+    jobs: ["営業","経営者","危機管理担当","プロデューサー","交渉人","スポーツ選手"]
+  }
+};
+
+const QUESTIONS = [
+  ["thinker","物事は感情より論理や事実に基づいて判断したい"],
+  ["persister","自分なりの価値観や信念を大切にしている"],
+  ["harmonizer","人の気持ちを敏感に感じ取る方だ"],
+  ["imaginer","一人の時間でじっくり考えるのが好きだ"],
+  ["rebel","楽しいこと、面白いことに強く惹かれる"],
+  ["promoter","状況に応じて臨機応変に対応するのが得意だ"],
+
+  ["thinker","計画を立てて、手順通りに物事を進めるのが得意だ"],
+  ["persister","正しいと思うことは、周りに反対されても貫きたい"],
+  ["harmonizer","場の雰囲気が悪くならないよう気を配る"],
+  ["imaginer","大勢でにぎやかに過ごすより静かな環境を好む"],
+  ["rebel","決まりきったルールや手順に窮屈さを感じる"],
+  ["promoter","リスクがあっても結果を出すためなら行動する"],
+
+  ["thinker","「なぜそうなるのか」の理由が分からないと納得できない"],
+  ["persister","物事の良し悪しをはっきり判断する方だ"],
+  ["harmonizer","頼まれごとを断るのが苦手だ"],
+  ["imaginer","指示があるまで自分から動くのは控えめだ"],
+  ["rebel","その場のノリや思いつきで行動することが多い"],
+  ["promoter","人を説得したり動かしたりするのが得意だ"],
+
+  ["thinker","効率が悪いやり方を見るとつい口を出したくなる"],
+  ["persister","誠実さや責任感のない人にはイライラする"],
+  ["harmonizer","誰かが困っていると放っておけない"],
+  ["imaginer","空想したり、物事をイメージするのが得意だ"],
+  ["rebel","退屈な状況ではすぐに不満を感じる"],
+  ["promoter","じっとしているより行動しながら考えるタイプだ"],
+
+  ["thinker","忙しくしていないと落ち着かない"],
+  ["persister","一度決めたことは簡単に曲げたくない"],
+  ["harmonizer","人との温かい繋がりを大切にしている"],
+  ["imaginer","感情や考えをあまり表に出さない方だ"],
+  ["rebel","人と違う発想をするのが好きだ"],
+  ["promoter","魅力的に振る舞い、人を惹きつけるのが得意だ"]
+];
+
+let answers = new Array(QUESTIONS.length).fill(null);
+let current = 0;
+
+function startQuiz(){
+  document.getElementById('screen-intro').classList.add('hidden');
+  document.getElementById('screen-quiz').classList.remove('hidden');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const [, text] = QUESTIONS[current];
+  document.getElementById('q-count').textContent = (current+1) + ' / ' + QUESTIONS.length;
+  document.getElementById('progress-bar').style.width = ((current)/QUESTIONS.length*100) + '%';
+  document.getElementById('q-text').textContent = text;
+
+  const scale = document.getElementById('q-scale');
+  scale.innerHTML = '';
+  for(let i=1;i<=5;i++){
+    const b = document.createElement('button');
+    b.textContent = i;
+    if(answers[current] === i) b.classList.add('selected');
+    b.onclick = () => selectAnswer(i);
+    scale.appendChild(b);
+  }
+
+  document.getElementById('btn-back').style.visibility = current === 0 ? 'hidden' : 'visible';
+}
+
+function selectAnswer(value){
+  answers[current] = value;
+  if(current < QUESTIONS.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function goBack(){
+  if(current > 0){
+    current--;
+    renderQuestion();
+  }
+}
+
+function showResult(){
+  document.getElementById('progress-bar').style.width = '100%';
+  document.getElementById('screen-quiz').classList.add('hidden');
+  document.getElementById('screen-result').classList.remove('hidden');
+
+  const scores = {thinker:0,persister:0,harmonizer:0,imaginer:0,rebel:0,promoter:0};
+  QUESTIONS.forEach((q, i) => {
+    scores[q[0]] += answers[i];
+  });
+
+  const ranked = Object.entries(scores).sort((a,b) => b[1]-a[1]);
+  const topKey = ranked[0][0];
+  const top = TYPES[topKey];
+
+  document.getElementById('r-badge').textContent = 'あなたのタイプ';
+  document.getElementById('r-badge').style.background = top.color;
+  document.getElementById('r-title').textContent = top.name;
+  document.getElementById('r-title').style.color = top.color;
+  document.getElementById('r-lead').textContent = top.lead;
+  document.getElementById('r-distress').textContent = top.distress;
+  document.getElementById('r-talent').textContent = top.talent;
+  document.getElementById('r-advice').textContent = top.advice;
+  document.getElementById('r-challenge').textContent = top.challenge;
+  document.getElementById('r-neglect').textContent = top.neglect;
+  document.getElementById('r-potential').textContent = top.potential;
+
+  const jobsWrap = document.getElementById('r-jobs');
+  jobsWrap.innerHTML = '';
+  top.jobs.forEach(j => {
+    const t = document.createElement('span');
+    t.className = 'tag';
+    t.textContent = j;
+    jobsWrap.appendChild(t);
+  });
+
+  const maxScore = 25;
+  const subWrap = document.getElementById('r-subscores');
+  subWrap.innerHTML = '<div style="font-size:0.8rem;color:var(--muted);margin-bottom:10px;">全タイプとの比較</div>';
+  ranked.forEach(([key, val]) => {
+    const t = TYPES[key];
+    const pct = Math.round(val / maxScore * 100);
+    const row = document.createElement('div');
+    row.className = 'sub-row';
+    row.innerHTML = `
+      <div class="label">${t.name}</div>
+      <div class="sub-bar-wrap"><div class="sub-bar" style="width:${pct}%; background:${t.color};"></div></div>
+      <div style="width:32px; text-align:right;">${val}</div>
+    `;
+    subWrap.appendChild(row);
+  });
+
+  window.scrollTo(0,0);
+}
+
+function restart(){
+  answers = new Array(QUESTIONS.length).fill(null);
+  current = 0;
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-intro').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
