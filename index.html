@@ -221,6 +221,44 @@
     width:100%;
     text-align:center;
   }
+  .consult-value{
+    background:#fff;
+    border-radius:12px;
+    padding:16px 18px;
+    margin:14px 0;
+  }
+  .consult-value-title{
+    font-weight:700;
+    font-size:0.9rem;
+    margin-bottom:10px;
+  }
+  .consult-value ul{
+    margin:0;
+    padding-left:1.1em;
+  }
+  .consult-value li{
+    font-size:0.88rem;
+    color:var(--ink);
+    margin-bottom:8px;
+  }
+  .consult-value li:last-child{
+    margin-bottom:0;
+  }
+  .qr-wrap{
+    text-align:center;
+    margin-top:16px;
+  }
+  .qr-img{
+    border-radius:8px;
+    background:#fff;
+    padding:6px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  }
+  .qr-caption{
+    font-size:0.75rem;
+    color:var(--muted);
+    margin-top:6px;
+  }
 </style>
 </head>
 <body>
@@ -298,9 +336,26 @@
         この結果画面をスクリーンショットで撮影し、下記までお送りいただければ、
         あなたの状況に合わせた個別相談を承ります。
       </p>
+
+      <div class="consult-value">
+        <div class="consult-value-title">30分でこんなことが持ち帰れます</div>
+        <ul>
+          <li>診断結果だけでは分からない、「なぜ自分が今のパターンに陥りやすいのか」の根っこを一緒に深掘りします</li>
+          <li>あなた自身の状況（仕事・人間関係など）に合わせた、具体的で実践しやすいアドバイスがもらえます</li>
+          <li>隠れた才能を、日々の仕事や人間関係でどう活かせるか、持ち帰れる次の一歩が見つかります</li>
+          <li>その場で気になることを自由に質問できる、あなただけの時間です</li>
+        </ul>
+      </div>
+
       <p class="consult-price">初回のみ　30分 2,000円</p>
-      <p class="consult-lead">ご相談・お問い合わせはこちらのLINE公式アカウントから</p>
+      <p class="consult-lead">ご相談・お問い合わせはこちらのLINE公式アカウントから<br>合言葉「そうだん」とメッセージしてください</p>
+
       <a class="btn line-btn" href="https://lin.ee/zwwXxOu" target="_blank" rel="noopener noreferrer">LINE公式アカウントを開く</a>
+
+      <div class="qr-wrap">
+        <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://lin.ee/zwwXxOu" alt="LINE公式アカウントQRコード" width="140" height="140" loading="lazy">
+        <div class="qr-caption">QRコードから読み取ることもできます</div>
+      </div>
     </div>
 
     <div class="center">
